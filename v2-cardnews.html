@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATC 발행 정산 절차 — 계산 예시</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E2238;
+    --panel:#14304C;
+    --panel-2:#183A5C;
+    --line:#6FA8C7;
+    --line-dim:rgba(111,168,199,0.28);
+    --grid:rgba(111,168,199,0.08);
+    --mint:#66D9B0;
+    --amber:#FFB238;
+    --text:#EAF2F8;
+    --dim:#93ACC2;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/38px 38px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/38px 38px,
+      var(--bg);
+    color:var(--text);
+    font-family:'Noto Sans KR', sans-serif;
+    line-height:1.65;
+  }
+  .disp{font-family:'Space Grotesk', sans-serif;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 24px;}
+
+  header{border-bottom:1px solid var(--line-dim); padding:16px 0;}
+  .hdr-row{display:flex; justify-content:space-between; align-items:center; font-size:11px;}
+  .hdr-row .mono{letter-spacing:0.12em; color:var(--dim);}
+  .hdr-row .badge{display:flex; align-items:center; gap:8px; color:var(--amber);}
+  .hdr-row .badge::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--amber); box-shadow:0 0 8px var(--amber);}
+
+  .hero{padding:56px 0 30px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; color:var(--amber); text-transform:uppercase; margin-bottom:16px;}
+  h1{font-weight:900; font-size:clamp(28px,5.5vw,44px); line-height:1.32; margin:0 0 18px; max-width:820px;}
+  h1 .hl{color:var(--mint);}
+  .hero-sub{color:var(--dim); font-size:15.5px; max-width:640px;}
+
+  .case-box{
+    display:flex; gap:14px; flex-wrap:wrap; margin-top:26px;
+  }
+  .case-chip{
+    background:var(--panel); border:1px solid var(--line-dim); border-radius:10px;
+    padding:12px 16px; font-size:12.5px; color:var(--dim); display:flex; gap:8px; align-items:baseline;
+  }
+  .case-chip b{color:var(--text); font-family:'Space Grotesk',sans-serif; font-size:14px;}
+
+  /* waterfall diagram */
+  .diagram-section{padding:26px 0 10px;}
+  .diagram-frame{
+    border:1px solid var(--line-dim); border-radius:14px; padding:8px 8px 4px;
+    background:rgba(20,48,76,0.35); position:relative;
+  }
+  .diagram-frame::before{
+    content:"WATERFALL — ATC 발행 정산 흐름"; position:absolute; top:-11px; left:18px; background:var(--bg);
+    padding:0 8px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.12em; color:var(--dim);
+  }
+  svg{width:100%; height:auto; display:block;}
+  .bar-label{font-family:'Noto Sans KR',sans-serif; font-weight:700; fill:var(--text); font-size:13px;}
+  .bar-sub{font-family:'IBM Plex Mono',monospace; fill:var(--dim); font-size:10.5px;}
+  .bar-value{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px;}
+
+  .legend{display:flex; gap:22px; flex-wrap:wrap; margin-top:16px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--dim);}
+  .legend span{display:flex; align-items:center; gap:7px;}
+  .legend i{width:16px; height:2px; display:inline-block;}
+
+  /* ledger of 9 steps */
+  .detail-section{padding:60px 0 10px;}
+  .sec-eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.16em; color:var(--mint); text-transform:uppercase; margin-bottom:8px;}
+  h2{font-size:clamp(20px,3vw,26px); font-weight:700; margin:0 0 24px;}
+
+  .steps{border-top:1px dashed var(--line-dim);}
+  .step-row{
+    display:grid; grid-template-columns:44px 1fr auto; gap:16px; align-items:center;
+    padding:14px 4px; border-bottom:1px dashed var(--line-dim);
+  }
+  .step-row .n{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:17px; color:var(--amber);}
+  .step-row .desc{font-size:13.5px; color:var(--dim);}
+  .step-row .desc b{color:var(--text);}
+  .step-row .val{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14.5px; text-align:right; white-space:nowrap;}
+  .step-row.highlight{background:rgba(102,217,176,0.06); border-radius:8px;}
+  .step-row.highlight .val{color:var(--mint);}
+
+  /* benefits */
+  .benefit-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:36px;}
+  @media(max-width:760px){.benefit-grid{grid-template-columns:1fr;}}
+  .benefit-card{background:var(--panel); border:1px solid var(--line-dim); border-radius:12px; padding:22px 22px 24px;}
+  .benefit-card .let{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:22px; color:var(--mint); margin-bottom:10px; display:block;}
+  .benefit-card h3{margin:0 0 8px; font-size:15px; font-weight:700;}
+  .benefit-card p{margin:0; font-size:13px; color:var(--dim);}
+
+  .thesis{
+    margin-top:30px; padding:20px 24px; border-left:3px solid var(--amber);
+    background:rgba(255,178,56,0.06); border-radius:0 10px 10px 0; font-size:15px;
+  }
+  .thesis b{color:var(--amber);}
+
+  /* compare current vs new */
+  .compare-section{padding:56px 0 10px;}
+  .cmp-row{display:flex; gap:14px; margin-top:20px;}
+  @media(max-width:640px){.cmp-row{flex-direction:column;}}
+  .cmp-col{flex:1; border-radius:12px; padding:18px 20px; border:1px solid var(--line-dim);}
+  .cmp-col.old{background:rgba(255,178,56,0.05);}
+  .cmp-col.new{background:rgba(102,217,176,0.05);}
+  .cmp-label{font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; margin-bottom:10px; display:block;}
+  .cmp-col.old .cmp-label{color:var(--amber);}
+  .cmp-col.new .cmp-label{color:var(--mint);}
+  .cmp-col ul{margin:0; padding-left:18px; font-size:13px; color:var(--dim);}
+  .cmp-col li{margin-bottom:6px;}
+
+  /* summary grid (reuse style) */
+  .sum-list{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:36px;}
+  @media(max-width:640px){.sum-list{grid-template-columns:1fr 1fr;}}
+  .sum-item{background:var(--panel-2); border-radius:8px; padding:14px 16px;}
+  .sum-item .k{display:block; font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:var(--amber); letter-spacing:0.05em; margin-bottom:6px;}
+  .sum-item .v{font-size:12.5px; color:var(--text);}
+
+  footer{padding:50px 0 60px; text-align:center; border-top:1px solid var(--line-dim); margin-top:56px;}
+  footer p{font-size:14.5px; color:var(--text); max-width:480px; margin:0 auto; line-height:1.9;}
+  footer .mono{display:block; margin-top:16px; font-size:10.5px; color:var(--dim);}
+
+  .reveal{opacity:0; transform:translateY(12px); transition:opacity .55s ease, transform .55s ease;}
+  .reveal.show{opacity:1; transform:none;}
+  @media (prefers-reduced-motion: reduce){.reveal{opacity:1; transform:none; transition:none;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap hdr-row">
+    <span class="mono">ATC / SCHEMATIC-02</span>
+    <span class="badge mono">CALCULATION EXAMPLE</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow reveal">ATC 발행 정산 절차 · 계산 예시</div>
+    <h1 class="reveal">17억 아파트가 <span class="hl">393,295 ATC</span>로<br>정산되기까지</h1>
+    <p class="hero-sub reveal">저당권 8억이 남아있는 아파트를 예로, ATC 발행부터 소유자가 최종 손에 쥐는 금액까지 아홉 단계를 하나의 흐름으로 계산합니다.</p>
+
+    <div class="case-box reveal">
+      <div class="case-chip">시가 <b>17억</b></div>
+      <div class="case-chip">저당권 <b>8억</b></div>
+      <div class="case-chip">1 ATC <b>1,700원</b> <span style="font-size:10.5px;">(매월고시)</span></div>
+    </div>
+  </div>
+
+  <div class="diagram-section reveal">
+    <div class="diagram-frame">
+      <svg viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid meet">
+        <!-- baseline -->
+        <line x1="40" y1="340" x2="1160" y2="340" stroke="#6FA8C7" stroke-opacity="0.35"/>
+
+        <!-- connector dashed lines -->
+        <line x1="230" y1="40" x2="280" y2="40" stroke="#93ACC2" stroke-dasharray="3,4" stroke-width="1.4"/>
+        <line x1="450" y1="209" x2="500" y2="209" stroke="#93ACC2" stroke-dasharray="3,4" stroke-width="1.4"/>
+        <line x1="670" y1="222" x2="720" y2="222" stroke="#93ACC2" stroke-dasharray="3,4" stroke-width="1.4"/>
+
+        <!-- Bar 1: 총 발행 ATC 1,000,000 -->
+        <rect x="60" y="40" width="170" height="300" rx="6" fill="#183A5C" stroke="#6FA8C7" stroke-opacity="0.6"/>
+        <text x="145" y="28" text-anchor="middle" class="bar-label">총 발행 ATC</text>
+        <text x="145" y="190" text-anchor="middle" class="bar-value" fill="#EAF2F8">1,000,000</text>
+        <text x="145" y="210" text-anchor="middle" class="bar-sub">17억 ÷ 1,700원</text>
+
+        <!-- Bar 2 floating: 저당권투자자 지급 120% -564,705 -->
+        <rect x="280" y="40" width="170" height="169.4" rx="6" fill="rgba(255,178,56,0.16)" stroke="#FFB238" stroke-opacity="0.7"/>
+        <text x="365" y="28" text-anchor="middle" class="bar-label" fill="#FFB238">저당권 투자자 지급</text>
+        <text x="365" y="120" text-anchor="middle" class="bar-value" fill="#FFB238">− 564,705</text>
+        <text x="365" y="140" text-anchor="middle" class="bar-sub">8억 원금 470,588 ATC × 120%</text>
+
+        <!-- Bar 3 floating: 전환비용 4.2% -42,000 -->
+        <rect x="500" y="209" width="170" height="13" rx="4" fill="rgba(255,178,56,0.28)" stroke="#FFB238" stroke-opacity="0.5"/>
+        <text x="585" y="196" text-anchor="middle" class="bar-label" fill="#FFB238" font-size="12">전환비용</text>
+        <text x="585" y="245" text-anchor="middle" class="bar-value" fill="#FFB238" font-size="13">− 42,000</text>
+        <text x="585" y="263" text-anchor="middle" class="bar-sub">신탁·등기·보수 4.2%</text>
+
+        <!-- Bar 4: 소유자 지급총액 393,295 -->
+        <rect x="720" y="222" width="190" height="118" rx="6" fill="rgba(102,217,176,0.18)" stroke="#66D9B0" stroke-width="1.6"/>
+        <text x="815" y="210" text-anchor="middle" class="bar-label" fill="#66D9B0">소유자 지급총액</text>
+        <text x="815" y="275" text-anchor="middle" class="bar-value" fill="#66D9B0" font-size="18">393,295</text>
+        <text x="815" y="295" text-anchor="middle" class="bar-sub">≈ 668,601,500원</text>
+      </svg>
+    </div>
+
+    <div class="legend">
+      <span><i style="background:#6FA8C7"></i>총 발행 ATC (기준)</span>
+      <span><i style="background:#FFB238"></i>저당권 정산 · 전환비용 (차감)</span>
+      <span><i style="background:#66D9B0"></i>소유자 최종 지급 (결과)</span>
+    </div>
+  </div>
+
+  <div class="detail-section">
+    <div class="sec-eyebrow reveal">STEP LEDGER</div>
+    <h2 class="reveal">계산 9단계</h2>
+
+    <div class="steps reveal">
+      <div class="step-row"><span class="n">①</span><span class="desc">시가 <b>17억</b> 아파트</span><span class="val">1,700,000,000원</span></div>
+      <div class="step-row"><span class="n">②</span><span class="desc">변제해야 할 <b>저당권 총액</b></span><span class="val">800,000,000원</span></div>
+      <div class="step-row"><span class="n">③</span><span class="desc">전환시점 <b>1 ATC 가격</b> (매월고시)</span><span class="val">1,700원</span></div>
+      <div class="step-row"><span class="n">④</span><span class="desc">시가 17억 → <b>ATC 단위 전환</b></span><span class="val">1,000,000 ATC</span></div>
+      <div class="step-row"><span class="n">⑤</span><span class="desc">저당권 변제총액 8억 → ATC 환산</span><span class="val">470,588 ATC</span></div>
+      <div class="step-row"><span class="n">⑥</span><span class="desc">저당권 투자자 지급총액 <b>120%</b></span><span class="val">564,705 ATC</span></div>
+      <div class="step-row"><span class="n">⑦</span><span class="desc">전환비용 (신탁·등기·보수) <b>4.2%</b></span><span class="val">42,000 ATC</span></div>
+      <div class="step-row"><span class="n">⑧</span><span class="desc">ATC 전환 총비용 <span class="mono" style="font-size:11px;">(⑥+⑦)</span></span><span class="val">606,705 ATC</span></div>
+      <div class="step-row highlight"><span class="n">⑨</span><span class="desc"><b>소유자 지급총액</b> <span class="mono" style="font-size:11px;">(④−⑧)</span></span><span class="val">393,295 ATC</span></div>
+    </div>
+
+    <div class="thesis reveal">
+      <b>ATC는 부채해방을 위한 자산화폐입니다.</b> 소유자는 8억 저당권의 원금 상환과 매월 이자 지급 의무에서 영구히 벗어나고, 그 대가로 유동화 자산 393,295 ATC(약 668,601,500원)를 받습니다.
+    </div>
+
+    <div class="benefit-grid reveal">
+      <div class="benefit-card">
+        <span class="let">a</span>
+        <h3>영구사용권 보장</h3>
+        <p>소유권의 핵심요소인 영구사용권을 법률적으로 보장받고, 신탁등기로 보호됩니다.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="let">b</span>
+        <h3>부채에서 해방</h3>
+        <p>8억 저당권 원금 상환과 매월 이자 지급 의무에서 영원히 해방됩니다.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="let">c</span>
+        <h3>유동화 자산 수령</h3>
+        <p>393,295 ATC(약 668,601,500원)를 유동화 자산으로 지급받습니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="compare-section">
+    <div class="sec-eyebrow reveal">COMPARISON</div>
+    <h2 class="reveal">기존 유동화 방식과 무엇이 다른가</h2>
+    <div class="cmp-row reveal">
+      <div class="cmp-col old">
+        <span class="cmp-label">기존 유동화 제도</span>
+        <ul>
+          <li>매각 → 사용권 상실</li>
+          <li>대출 → 부채와 함께 사용권 유지</li>
+        </ul>
+      </div>
+      <div class="cmp-col new">
+        <span class="cmp-label">ATC 사용권부 유동화</span>
+        <ul>
+          <li>사용권이 영구 보장된 상태로 자산을 현금화</li>
+          <li>매각처럼 살 곳을 잃지도, 대출처럼 빚을 지지도 않음</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sum-list reveal">
+      <div class="sum-item"><span class="k">영구사용권</span><span class="v">소유권의 본질요소, 신탁등기로 보호</span></div>
+      <div class="sum-item"><span class="k">사용권부 유동화</span><span class="v">사용권이 영구보장된 자산의 현금화</span></div>
+      <div class="sum-item"><span class="k">부채해방</span><span class="v">8억 채무원금, 연이자 약 4천만원 영구소멸</span></div>
+      <div class="sum-item"><span class="k">인류 역사상 최초</span><span class="v">사용권부 유동화, 전례가 없는 방식</span></div>
+      <div class="sum-item"><span class="k">부채경제 종식</span><span class="v">ATC가 발행·유통되면 부채경제 → 자산경제</span></div>
+      <div class="sum-item"><span class="k">근거</span><span class="v">민법·등기법상 부동산 지분거래</span></div>
+    </div>
+  </div>
+
+  <footer>
+    <p class="reveal">ATC는 부채해방을 위한<br>자산화폐입니다.</p>
+    <span class="mono">PAGE 02 — ATC WHITEPAPER · SCHEMATIC-02</span>
+  </footer>
+
+</div>
+
+<script>
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('show'); io.unobserve(e.target);} });
+  },{threshold:0.1});
+  els.forEach(el=>io.observe(el));
+</script>
+
+</body>
+</html>

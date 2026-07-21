@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATC — 아파트 신탁화폐란 무엇인가</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16233D;
+    --paper:#F0EBDD;
+    --paper-dark:#E4DCC8;
+    --gold:#A6822C;
+    --gold-light:#C9A84C;
+    --seal:#35594A;
+    --rust:#9C4221;
+    --muted:#5B5647;
+    --line: rgba(22,35,61,0.16);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Noto Sans KR', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  .serif{font-family:'Noto Serif KR', serif;}
+
+  /* faint paper texture via layered gradients */
+  body{
+    background-image:
+      radial-gradient(circle at 15% 8%, rgba(166,130,44,0.05), transparent 40%),
+      radial-gradient(circle at 85% 92%, rgba(53,89,74,0.06), transparent 45%);
+    background-attachment:fixed;
+  }
+
+  .wrap{max-width:900px;margin:0 auto;padding:0 24px;}
+
+  /* ---------- Header / ledger banner ---------- */
+  .doc-bar{
+    border-bottom:1px solid var(--line);
+    padding:14px 0;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.08em;
+    color:var(--muted);
+    display:flex; justify-content:space-between;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{padding:64px 0 40px; position:relative;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; letter-spacing:0.18em; color:var(--seal);
+    text-transform:uppercase; margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--seal);}
+  h1.title{
+    font-family:'Noto Serif KR', serif;
+    font-weight:900;
+    font-size:clamp(32px, 6vw, 54px);
+    line-height:1.22;
+    margin:0 0 20px;
+    letter-spacing:-0.01em;
+  }
+  h1.title em{
+    font-style:normal;
+    color:var(--rust);
+    border-bottom:3px solid var(--gold-light);
+  }
+  .hero-sub{
+    font-size:17px; color:var(--muted); max-width:560px; margin-bottom:36px;
+  }
+
+  .stamp-block{
+    display:flex; align-items:center; gap:28px; flex-wrap:wrap;
+  }
+  .stamp{
+    width:172px; height:172px; border-radius:50%;
+    border:3px solid var(--rust);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    transform:rotate(-8deg);
+    position:relative;
+    flex:0 0 auto;
+    background:radial-gradient(circle, rgba(156,66,33,0.03), transparent 70%);
+  }
+  .stamp::before{
+    content:"";
+    position:absolute; inset:9px;
+    border:1px solid var(--rust);
+    border-radius:50%;
+    opacity:0.55;
+  }
+  .stamp .top-arc, .stamp .bottom-arc{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9.5px; letter-spacing:0.2em; color:var(--rust); font-weight:600;
+  }
+  .stamp .eq{
+    font-family:'Noto Serif KR', serif;
+    font-weight:900; font-size:22px; color:var(--rust); margin:2px 0;
+  }
+  .stamp .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600; font-size:15px; color:var(--rust);
+  }
+  .stamp-caption{
+    font-size:14px; color:var(--muted); max-width:280px;
+  }
+  .stamp-caption b{color:var(--ink);}
+
+  /* ---------- Section shell ---------- */
+  section{padding:56px 0; border-top:1px solid var(--line);}
+  .sec-head{margin-bottom:32px;}
+  .sec-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; color:var(--gold); letter-spacing:0.14em; margin-bottom:8px;
+    display:block;
+  }
+  h2{
+    font-family:'Noto Serif KR', serif;
+    font-size:clamp(22px,3.4vw,30px);
+    margin:0 0 10px;
+    font-weight:700;
+  }
+  .sec-desc{color:var(--muted); font-size:15px; max-width:600px;}
+
+  /* ---------- Section 1: ownership split ---------- */
+  .split-diagram{
+    display:flex; align-items:center; justify-content:center; gap:0;
+    flex-wrap:wrap; margin-top:20px;
+  }
+  .apt-box{
+    background:var(--ink); color:var(--paper);
+    border-radius:10px;
+    padding:26px 30px;
+    text-align:center;
+    font-family:'Noto Serif KR', serif;
+    font-weight:700; font-size:17px;
+    min-width:150px;
+  }
+  .apt-box span{display:block; font-size:12px; font-weight:400; opacity:0.7; margin-top:4px; font-family:'IBM Plex Mono',monospace;}
+  .split-arrows{
+    display:flex; flex-direction:column; gap:14px; margin:0 22px;
+    color:var(--muted); font-size:22px;
+  }
+  .branch{display:flex; gap:18px; flex-wrap:wrap; justify-content:center;}
+  .branch-card{
+    width:230px; background:var(--paper-dark); border-radius:10px;
+    padding:20px 22px; border-left:4px solid var(--seal);
+  }
+  .branch-card.right{border-left-color:var(--rust);}
+  .branch-card h3{margin:0 0 8px; font-size:15px; font-family:'Noto Serif KR',serif;}
+  .branch-card p{margin:0; font-size:13.5px; color:var(--muted);}
+  .branch-card .who{
+    display:inline-block; margin-top:10px; font-family:'IBM Plex Mono',monospace;
+    font-size:11px; padding:3px 8px; border-radius:20px;
+    background:rgba(22,35,61,0.06); color:var(--ink);
+  }
+
+  /* ---------- Section 2: unit conversion ---------- */
+  .conv-row{display:flex; gap:40px; align-items:center; flex-wrap:wrap; margin-top:10px;}
+  .grid-vis{
+    display:grid; grid-template-columns:repeat(20,1fr); gap:2px;
+    width:220px; flex:0 0 auto;
+  }
+  .grid-vis div{
+    aspect-ratio:1; background:var(--gold-light); border-radius:1px; opacity:0.85;
+  }
+  .conv-math{font-family:'IBM Plex Mono', monospace; font-size:15px; line-height:2.1;}
+  .conv-math .big{font-size:20px; font-weight:600; color:var(--rust);}
+  .conv-math .arrow{color:var(--gold); margin:0 10px;}
+  .conv-note{font-size:13px; color:var(--muted); margin-top:14px; max-width:340px;}
+
+  /* ---------- Section 3: process ledger ---------- */
+  .ledger{border-top:1px dashed var(--line);}
+  .ledger-item{
+    display:grid; grid-template-columns:64px 1fr;
+    gap:18px;
+    padding:22px 0;
+    border-bottom:1px dashed var(--line);
+  }
+  .ledger-item .art{
+    font-family:'Noto Serif KR', serif; font-weight:900; font-size:26px; color:var(--gold);
+  }
+  .ledger-item h4{
+    margin:0 0 6px; font-size:16px; font-family:'Noto Serif KR',serif;
+  }
+  .ledger-item p{margin:0; font-size:13.5px; color:var(--muted);}
+  .flow-tag{
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.06em;
+    padding:2px 7px; border-radius:3px; margin-right:6px; display:inline-block; margin-top:8px;
+  }
+  .flow-tag.money{background:rgba(166,130,44,0.14); color:var(--gold);}
+  .flow-tag.right{background:rgba(53,89,74,0.14); color:var(--seal);}
+
+  /* ---------- Section 4: before/after ---------- */
+  .ba-wrap{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:22px;}
+  @media(max-width:640px){.ba-wrap{grid-template-columns:1fr;}}
+  .ba-card{border-radius:10px; padding:22px; position:relative;}
+  .ba-card.before{background:rgba(156,66,33,0.06); border:1px solid rgba(156,66,33,0.25);}
+  .ba-card.after{background:rgba(53,89,74,0.06); border:1px solid rgba(53,89,74,0.25);}
+  .ba-label{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em;
+    text-transform:uppercase; margin-bottom:12px; display:block;
+  }
+  .ba-card.before .ba-label{color:var(--rust);}
+  .ba-card.after .ba-label{color:var(--seal);}
+  .ba-card ul{margin:0; padding-left:18px; font-size:13.5px;}
+  .ba-card.before ul li{color:#7a3319; margin-bottom:6px; text-decoration:line-through; text-decoration-color:rgba(156,66,33,0.5);}
+  .ba-card.after ul li{color:#28453a; margin-bottom:6px;}
+  .ba-arrow-mid{
+    text-align:center; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); margin:14px 0 -4px;
+  }
+
+  /* ---------- Section 5: pricing chart ---------- */
+  .chart-box{
+    margin-top:20px; background:var(--paper-dark); border-radius:10px; padding:26px;
+  }
+  svg{width:100%; height:auto; display:block;}
+  .chart-legend{display:flex; gap:20px; font-size:12px; color:var(--muted); margin-top:14px; font-family:'IBM Plex Mono',monospace;}
+  .chart-legend span{display:flex; align-items:center; gap:6px;}
+  .dot{width:9px; height:9px; border-radius:50%; display:inline-block;}
+
+  /* ---------- Summary table ---------- */
+  .summary-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:22px;}
+  @media(max-width:700px){.summary-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:460px){.summary-grid{grid-template-columns:1fr;}}
+  .sum-card{
+    background:var(--ink); color:var(--paper);
+    border-radius:8px; padding:16px 16px 18px;
+  }
+  .sum-card .k{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--gold-light); letter-spacing:0.06em; margin-bottom:8px; display:block;}
+  .sum-card .v{font-size:13.5px; line-height:1.5;}
+
+  footer{
+    padding:44px 0 60px; border-top:1px solid var(--line);
+    text-align:center;
+  }
+  footer p{
+    font-family:'Noto Serif KR', serif; font-size:15px; color:var(--ink);
+    max-width:480px; margin:0 auto; line-height:1.8;
+  }
+  footer .stamp-small{
+    display:inline-block; margin-top:18px; font-family:'IBM Plex Mono',monospace;
+    font-size:11px; color:var(--muted); border-top:1px solid var(--line); padding-top:14px;
+  }
+
+  .reveal{opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.show{opacity:1; transform:translateY(0);}
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1; transform:none; transition:none;}
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-bar wrap">
+  <span>REG. NO. ATC-2026-DOC</span>
+  <span>부동산 지분거래 안내문</span>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow reveal">부동산 처분의 새로운 개념</div>
+    <h1 class="title reveal">아파트 지분을,<br><em>화폐처럼</em> 거래한다</h1>
+    <p class="hero-sub reveal">ATC(Apt Trust Currency)는 아파트 한 채를 100만 개의 지분으로 쪼개어, 신탁등기로 안전하게 보호하면서 거래 가능한 단위로 표시한 것입니다.</p>
+
+    <div class="stamp-block reveal">
+      <div class="stamp">
+        <div class="top-arc">1 ATC</div>
+        <div class="eq">=</div>
+        <div class="num">1,700원</div>
+        <div class="bottom-arc">지분거래단위</div>
+      </div>
+      <p class="stamp-caption">시가 <b>17억</b> 아파트 1채 = <b>1,000,000 ATC</b>.<br>ATC는 등기법·민법상 부동산 지분거래입니다.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <section id="s1">
+    <div class="sec-head reveal">
+      <span class="sec-num">STRUCTURE</span>
+      <h2>소유권을 둘로 나눈다</h2>
+      <p class="sec-desc">ATC 전환약정을 맺으면, 아파트 소유권은 "계속 살 권리"와 "팔고 빌려줄 권리"로 분리됩니다. 둘은 각자 다른 곳으로 갑니다.</p>
+    </div>
+
+    <div class="split-diagram reveal">
+      <div class="apt-box">아파트<span>ORIGINAL TITLE</span></div>
+      <div class="split-arrows">↗<br>↘</div>
+      <div class="branch">
+        <div class="branch-card">
+          <h3>영구사용권</h3>
+          <p>소유자가 계속 거주. 채무관계(저당권·전세권 등)를 모두 없앤 뒤 영구신탁등기로 법적 보호.</p>
+          <span class="who">소유자 보유</span>
+        </div>
+        <div class="branch-card right">
+          <h3>처분권</h3>
+          <p>매매·임대 계약 체결 권한. 공익적 제한이 따르는 대신 ATC를 대가로 지급받음.</p>
+          <span class="who">신탁회사 위임</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section id="s2">
+    <div class="sec-head reveal">
+      <span class="sec-num">CONVERSION</span>
+      <h2>17억이 어떻게 100만 ATC가 되는가</h2>
+      <p class="sec-desc">지분 하나의 값(1,700원)을 먼저 정하고, 아파트 시가를 그 값으로 나누면 발행되는 지분 수(ATC)가 정해집니다.</p>
+    </div>
+
+    <div class="conv-row reveal">
+      <div class="grid-vis" id="gridVis"></div>
+      <div>
+        <div class="conv-math">
+          <div><span class="big">1,700,000,000원</span></div>
+          <div>÷ <span class="big">1,700원</span> <span style="color:var(--muted); font-size:12px;">(1 ATC 가격)</span></div>
+          <div class="arrow">=</div>
+          <div><span class="big">1,000,000 ATC</span></div>
+        </div>
+        <p class="conv-note">위 격자 한 칸이 지분 다수를 대표하는 축소 표현입니다. 실제로는 100만 개의 지분으로 쪼개집니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section id="s3">
+    <div class="sec-head reveal">
+      <span class="sec-num">PROCESS · 제1조 ~ 제6조</span>
+      <h2>전환은 6단계로 진행된다</h2>
+      <p class="sec-desc">돈의 흐름과 권리의 흐름을 함께 표시했습니다.</p>
+    </div>
+
+    <div class="ledger reveal">
+      <div class="ledger-item">
+        <div class="art">01</div>
+        <div>
+          <h4>신탁등기로 안전성 확보</h4>
+          <p>부동산 신탁등기를 통해 아파트 지분거래의 안전성을 법적으로 영구히 보호합니다.</p>
+          <span class="flow-tag right">권리 보호</span>
+        </div>
+      </div>
+      <div class="ledger-item">
+        <div class="art">02</div>
+        <div>
+          <h4>권리 분리</h4>
+          <p>ATC 전환약정에 의해 아파트 소유권을 영구사용권과 처분권으로 나눕니다.</p>
+          <span class="flow-tag right">권리 분리</span>
+        </div>
+      </div>
+      <div class="ledger-item">
+        <div class="art">03</div>
+        <div>
+          <h4>제한의 대가로 ATC 지급</h4>
+          <p>매매·임대 처분권에 공익적 제한을 부가하는 대가로 소유자에게 ATC를 지급합니다.</p>
+          <span class="flow-tag money">ATC 지급</span>
+        </div>
+      </div>
+      <div class="ledger-item">
+        <div class="art">04</div>
+        <div>
+          <h4>처분계약 권한은 신탁회사로</h4>
+          <p>매매·임대 등 처분계약을 체결하는 권한은 신탁회사에 전속적으로 귀속됩니다.</p>
+          <span class="flow-tag right">권한 이전</span>
+        </div>
+      </div>
+      <div class="ledger-item">
+        <div class="art">05</div>
+        <div>
+          <h4>수익은 소유자에게</h4>
+          <p>처분계약으로 발생한 수익은 계약 체결 권한과 별개로 아파트 소유자에게 귀속됩니다.</p>
+          <span class="flow-tag money">수익 귀속</span>
+        </div>
+      </div>
+      <div class="ledger-item">
+        <div class="art">06</div>
+        <div>
+          <h4>채무 소멸 후 영구신탁등기</h4>
+          <p>영구사용권 보호를 위해 저당권·전세권·가등기·가압류 등 채무관계를 완전히 소멸시킨 후 영구신탁등기를 설정합니다.</p>
+          <span class="flow-tag money">채무 정리</span><span class="flow-tag right">영구등기</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section id="s4">
+    <div class="sec-head reveal">
+      <span class="sec-num">BEFORE / AFTER</span>
+      <h2>등기부, 정리 전과 후</h2>
+      <p class="sec-desc">ATC 매각대금으로 기존 권리관계를 먼저 매수·소멸시킨 뒤에야 영구신탁등기가 설정됩니다.</p>
+    </div>
+
+    <div class="ba-wrap reveal">
+      <div class="ba-card before">
+        <span class="ba-label">Before — 기존 등기부</span>
+        <ul>
+          <li>저당권</li>
+          <li>전세권</li>
+          <li>가등기</li>
+          <li>가압류</li>
+        </ul>
+      </div>
+      <div class="ba-card after">
+        <span class="ba-label">After — 영구신탁등기</span>
+        <ul>
+          <li>채무관계 전부 소멸</li>
+          <li>영구사용권 법적 확정</li>
+          <li>처분권만 신탁회사 귀속</li>
+        </ul>
+      </div>
+    </div>
+    <p class="ba-arrow-mid">ATC 매각대금 → 기존 권리 매수 → 공익화</p>
+  </section>
+
+  <!-- SECTION 5 -->
+  <section id="s5">
+    <div class="sec-head reveal">
+      <span class="sec-num">PRICING</span>
+      <h2>ATC 가격은 어떻게 정해지나</h2>
+      <p class="sec-desc">한국·미국의 M2(통화량) 증가율에 연동되며, 매년·매월 가격이 사전에 고시됩니다.</p>
+    </div>
+
+    <div class="chart-box reveal">
+      <svg viewBox="0 0 600 200" preserveAspectRatio="none">
+        <line x1="0" y1="170" x2="600" y2="170" stroke="#5B5647" stroke-opacity="0.25"/>
+        <line x1="0" y1="120" x2="600" y2="120" stroke="#5B5647" stroke-opacity="0.12"/>
+        <line x1="0" y1="70" x2="600" y2="70" stroke="#5B5647" stroke-opacity="0.12"/>
+        <polyline points="0,150 80,140 160,128 240,132 320,110 400,95 480,80 560,60 600,52"
+          fill="none" stroke="#A6822C" stroke-width="3"/>
+        <polyline points="0,160 80,150 160,140 240,145 320,125 400,118 480,100 560,85 600,78"
+          fill="none" stroke="#35594A" stroke-width="2" stroke-dasharray="5,4"/>
+      </svg>
+      <div class="chart-legend">
+        <span><i class="dot" style="background:#A6822C"></i>ATC 고시가격</span>
+        <span><i class="dot" style="background:#35594A"></i>韓·美 M2 증가율(참고)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUMMARY -->
+  <section id="s6">
+    <div class="sec-head reveal">
+      <span class="sec-num">SUMMARY</span>
+      <h2>한눈에 정리</h2>
+    </div>
+    <div class="summary-grid reveal">
+      <div class="sum-card"><span class="k">아파트 신탁화폐</span><div class="v">APT 지분을 실물화폐처럼 사용</div></div>
+      <div class="sum-card"><span class="k">신탁등기 목적</span><div class="v">법적 사용권 영구 보호 + 처분권의 공익적 행사</div></div>
+      <div class="sum-card"><span class="k">ATC 매각방법</span><div class="v">1 ATC ≒ 1,700원, 투자금 120% 지급</div></div>
+      <div class="sum-card"><span class="k">ATC란</span><div class="v">아파트 지분 거래단위를 표시하는 용어</div></div>
+      <div class="sum-card"><span class="k">저당권 등 소멸</span><div class="v">ATC 매각대금으로 권리 매수 후 공익화</div></div>
+      <div class="sum-card"><span class="k">ATC 가격결정</span><div class="v">한·미 M2 증가율 연동, 매년·매월 사전 고시</div></div>
+    </div>
+  </section>
+
+  <footer>
+    <p class="reveal">ATC는 민법과 등기법에 의한<br>부동산 지분거래입니다.</p>
+    <div class="stamp-small">END OF DOCUMENT — ATC-2026</div>
+  </footer>
+
+</div>
+
+<script>
+  // build the 1,000,000-share grid (scaled)
+  const grid = document.getElementById('gridVis');
+  for(let i=0;i<200;i++){ const d=document.createElement('div'); grid.appendChild(d); }
+
+  // scroll reveal
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('show'); io.unobserve(e.target);} });
+  },{threshold:0.12});
+  els.forEach(el=>io.observe(el));
+</script>
+
+</body>
+</html>
