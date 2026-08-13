@@ -1120,46 +1120,34 @@
     display: block; margin-bottom: 4px;
   }
 
-  /* ---- author profile card (dark, matches whitepaper style) ---- */
+  /* ---- author profile strip (compact, matches page tone) ---- */
   .about-card{
-    background: var(--ink); color: #EAF0FE; border-radius: 18px;
-    padding: 26px 24px; margin-bottom: 22px;
+    background: var(--card); border: 1.5px solid var(--line); border-radius: 14px;
+    padding: 16px 18px; margin-bottom: 20px;
   }
-  .about-who{ display: flex; gap: 14px; align-items: flex-start; margin-bottom: 18px; }
+  .about-top{ display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
   .about-mark{
-    width: 46px; height: 46px; border-radius: 50%; background: #E7C567; color: var(--ink);
+    width: 34px; height: 34px; border-radius: 50%; background: var(--gold-tint); color: var(--gold);
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Noto Sans KR', sans-serif; font-weight: 900; font-size: 17px; flex: 0 0 auto;
+    font-family: 'Noto Sans KR', sans-serif; font-weight: 900; font-size: 13px; flex: 0 0 auto;
   }
-  .about-who h3{
-    font-family: 'Space Grotesk','Noto Sans KR', sans-serif; font-weight: 700; font-size: 17px;
-    color: #fff; margin-bottom: 3px;
+  .about-name-row{ display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .about-name-row h3{
+    font-family: 'Space Grotesk','Noto Sans KR', sans-serif; font-weight: 700; font-size: 14px; color: var(--ink);
   }
-  .about-role{ font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: #9FB4E8; margin-bottom: 10px; }
-  .about-headline{ font-size: 13px; line-height: 1.7; color: #D7DEEA; }
+  .about-role{ font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--ink-soft); }
+  .about-headline{ font-size: 12px; line-height: 1.6; color: var(--ink-soft); margin-bottom: 12px; }
 
-  .about-stats{ display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-  .about-stat{ background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 13px 14px; }
-  .about-stat b{
-    display: block; font-family: 'Space Grotesk','Noto Sans KR', sans-serif; font-weight: 700;
-    font-size: 17px; color: #E7C567; margin-bottom: 3px;
-  }
-  .about-stat span{ font-size: 11px; color: #B9C3D6; }
-
-  .about-timeline{ padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.14); margin-bottom: 18px; }
-  .about-tl-row{ display: flex; flex-wrap: wrap; gap: 8px; }
-  .about-tl-row span{
-    background: rgba(255,255,255,0.06); border-radius: 20px; padding: 6px 12px;
-    font-size: 11.5px; color: #D7DEEA; white-space: nowrap;
-  }
-  .about-tl-row span b{ color: #E7C567; font-family: 'IBM Plex Mono', monospace; font-weight: 500; margin-right: 6px; }
+  .about-stats-inline{ display: flex; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 12px; }
+  .about-stats-inline .st{ font-size: 11.5px; color: var(--ink-soft); white-space: nowrap; }
+  .about-stats-inline .st b{ font-family: 'Space Grotesk','Noto Sans KR', sans-serif; color: var(--gold); font-weight: 700; margin-right: 4px; }
 
   .about-contact{
-    padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.14);
-    display: flex; flex-wrap: wrap; gap: 16px;
-    font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #B9C3D6;
+    padding-top: 10px; border-top: 1px dashed var(--line);
+    display: flex; flex-wrap: wrap; gap: 12px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--ink-soft);
   }
-  .about-contact b{ color: #fff; font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 12px; }
+  .about-contact b{ color: var(--ink); font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 11px; }
 
   /* ================= Master tabs (백서 / 국민경제학교) ================= */
   .master-tabbar{
@@ -2199,31 +2187,20 @@
 <footer class="site-footer">
   <div class="wrap" style="padding: 0;">
     <div class="about-card">
-      <div class="about-who">
+      <div class="about-top">
         <div class="about-mark">명</div>
-        <div>
+        <div class="about-name-row">
           <h3>명경선생 김점수</h3>
-          <div class="about-role">LBA경제연구소 · ATC 이론 설계</div>
+          <span class="about-role">LBA경제연구소 · ATC 이론 설계</span>
         </div>
       </div>
-      <p class="about-headline">20년간 대한민국 부동산 전문가 교육 1위 과정을 운영하며, 부동산화폐·주가방정식·부동산금융을 연구해 온 실무·이론 전문가입니다.</p>
+      <p class="about-headline">20년간 대한민국 부동산 전문가 교육 1위 과정을 운영해 온 실무·이론 전문가입니다.</p>
 
-      <div class="about-stats">
-        <div class="about-stat"><b>13,600명+</b><span>배출한 부동산 전문가 수</span></div>
-        <div class="about-stat"><b>20년</b><span>LBA 부동산법률중개사 과정 (98~17)</span></div>
-        <div class="about-stat"><b>8개 대학</b><span>한양대·경기대·숭실대·부산대 외</span></div>
-        <div class="about-stat"><b>EBS·MBC·SBS</b><span>부동산 방송 강의 출연</span></div>
-      </div>
-
-      <div class="about-timeline">
-        <div class="about-tl-row">
-          <span><b>1995</b>우성종합토건(주) 상무이사</span>
-          <span><b>2001</b>유니에셋(주) 전무이사</span>
-          <span><b>98–17</b>LBA 부동산법률중개사 과정 20년</span>
-          <span><b>02–05</b>보험연수원 부동산권리분석사 과정 개설</span>
-          <span><b>2003</b>EBS "김점수 이것이 부동산이다"</span>
-          <span><b>12–24</b>명품경제학·명경대학 — 부동산화폐 연구</span>
-        </div>
+      <div class="about-stats-inline">
+        <span class="st"><b>13,600명+</b>배출</span>
+        <span class="st"><b>20년</b>LBA 부동산법률중개사 과정</span>
+        <span class="st"><b>8개 대학</b>강의</span>
+        <span class="st"><b>EBS·MBC·SBS</b>방송 출연</span>
       </div>
 
       <div class="about-contact">
