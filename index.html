@@ -2358,6 +2358,10 @@ document.querySelectorAll('.master-tab').forEach(btn=>{
 // (renderAcademyList 등 아래에서 정의되므로, 실제 호출은 스크립트 맨 아래에서 합니다)
 function initialView(){
   const params = new URLSearchParams(window.location.search);
+  const completed = parseInt(params.get('completed') || '0', 10);
+  if(Number.isFinite(completed) && completed > 0){
+    acSetProgress(Math.max(acGetProgress(), Math.min(completed, 30)));
+  }
   const requested = params.get('view') === 'academy' ? 'academy' : 'wp';
   activateView(requested, { silent: true });
 }
@@ -3012,14 +3016,21 @@ function acSetWalletStatus(message, type=''){
   el.className = `ac-wallet-status ${type}`.trim();
   el.textContent = message || '';
 }
+function acOpenTelegramLink(url){
+  if(window.Telegram?.WebApp?.openTelegramLink){
+    window.Telegram.WebApp.openTelegramLink(url);
+  }else{
+    window.location.href = url;
+  }
+}
 function acConnectWalletForLesson(lesson){
   acSetProgress(Math.max(acGetProgress(), lesson.id));
   acSetWalletStatus('텔레그램에서 월렛을 연결하면 수강 기록이 반영됩니다.', 'ok');
-  window.location.href = acWalletDeepLink(lesson);
+  acOpenTelegramLink(acWalletDeepLink(lesson));
 }
 
-function acGetProgress(){ return parseInt(localStorage.getItem('atc_lesson_progress') || '0'); }
-function acSetProgress(n){ localStorage.setItem('atc_lesson_progress', String(n)); }
+function acGetProgress(){ const value = parseInt(localStorage.getItem('atc_lesson_progress') || '0', 10); return Number.isFinite(value) ? Math.max(0, Math.min(value, 30)) : 0; }
+function acSetProgress(n){ const value = Number.isFinite(Number(n)) ? Math.max(0, Math.min(parseInt(n, 10), 30)) : 0; localStorage.setItem('atc_lesson_progress', String(value)); }
 
 function renderAcademyList(){
   const p = acGetProgress();
@@ -3116,7 +3127,7 @@ function renderAcReward(l){
   const walletCheckBtn = document.getElementById('acWalletCheckBtn');
   if(walletCheckBtn){
     walletCheckBtn.addEventListener('click', ()=>{
-      window.location.href = acWalletDeepLink(l);
+      acOpenTelegramLink(acWalletDeepLink(l));
     });
   }
 }
