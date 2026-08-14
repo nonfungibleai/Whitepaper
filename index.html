@@ -3,25 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <title>ATC — 아파트 신탁화폐</title>
-
-<!-- Favicon -->
-<link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
-<link rel="apple-touch-icon" href="/favicon.png">
-
-<!-- Open Graph (카카오톡·페이스북·슬랙 등 링크 공유 미리보기) -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="ATC 백서 & 국민경제학교">
-<meta property="og:title" content="ATC — 아파트 신탁화폐 백서 & 국민경제학교">
-<meta property="og:description" content="부채는 정리하고, 사용권은 지키는 새로운 부동산 유동화 구조. 백서와 국민경제학교를 한 곳에서 확인하세요.">
-<meta property="og:image" content="https://atchome.vercel.app/og-image.png">
-<meta property="og:url" content="https://atchome.vercel.app/">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="ATC — 아파트 신탁화폐">
-<meta name="twitter:description" content="부채는 정리하고, 사용권은 지키는 새로운 부동산 유동화 구조">
-<meta name="twitter:image" content="https://atchome.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -1190,10 +1173,6 @@
   .master-tab:hover:not(.active){ color: var(--ink); }
   .master-tab.active[data-view="wp"]{ background: var(--blue); color: #fff; }
   .master-tab.active[data-view="academy"]{ background: var(--mint); color: #fff; }
-  .view-counter{
-    font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--ink-soft);
-    white-space: nowrap;
-  }
 
   /* ================= Academy view ================= */
   #academyView{ display: none; }
@@ -1296,6 +1275,41 @@
     border-radius:30px; padding:13px 24px; font-size:13.5px; font-weight:700; cursor:pointer;
   }
 
+
+
+  /* ================= Wallet CTA / integration ================= */
+  .wallet-cta-card{
+    margin: 34px 0 10px;
+    background: var(--ink);
+    color:#fff;
+    border-radius:18px;
+    padding:24px 20px;
+    border:1px solid rgba(255,255,255,0.12);
+  }
+  .wallet-cta-kicker{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px; letter-spacing:0.08em;
+    color:#9FB4E8; margin-bottom:8px; text-transform:uppercase;
+  }
+  .wallet-cta-card h3{
+    font-family:'Space Grotesk','Noto Sans KR',sans-serif;
+    font-size:22px; line-height:1.35; margin-bottom:8px;
+  }
+  .wallet-cta-card p{ font-size:13.5px; line-height:1.7; color:#DDE5F7; margin-bottom:16px; }
+  .wallet-cta-button{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--blue); color:#fff; text-decoration:none; border:none;
+    border-radius:30px; padding:13px 22px; font-size:13.5px; font-weight:700;
+    font-family:'Noto Sans KR',sans-serif; cursor:pointer;
+  }
+  .ac-wallet-status{
+    margin-top:12px;
+    font-size:11.5px; line-height:1.6; color:var(--ink-soft);
+    min-height:18px;
+  }
+  .ac-wallet-status.ok{ color:var(--mint); }
+  .ac-wallet-status.err{ color:var(--gold); }
+
   /* ================= Desktop / web responsive layout ================= */
   @media (min-width: 768px){
     .wrap{ max-width: 760px; padding: 0 40px; }
@@ -1350,7 +1364,6 @@
     <button type="button" class="master-tab active" data-view="wp">📄 백서</button>
     <button type="button" class="master-tab" data-view="academy">🎓 국민경제학교</button>
   </div>
-  <span class="view-counter" id="viewCounter">조회수 · · ·</span>
 </div>
 
 <div id="wpView">
@@ -2228,6 +2241,15 @@
       </div>
     </div>
 
+
+
+    <div class="wallet-cta-card">
+      <div class="wallet-cta-kicker">ATC WALLET</div>
+      <h3>월렛을 열고 ATC를 체험해보세요</h3>
+      <p>가입 보너스, 추천 보너스, 국민경제학교 학습 보너스가 모두 ATC 월렛 원장에 기록됩니다.</p>
+      <a class="wallet-cta-button" href="https://t.me/atcbeta_bot?start=wallet" target="_blank" rel="noopener">💼 월렛 체험하기</a>
+    </div>
+
     <div class="footer-disclaimer">
       이 문서는 ATC(Apt Trust Currency) 구조에 대한 이해를 돕기 위해 제작된 설명 자료입니다.
       본문의 금액·환율·기간 등은 이해를 돕기 위한 예시 기준이며, 실제 조건은 물건별·시점별로 달라질 수 있습니다.
@@ -2242,7 +2264,7 @@
     <div class="ac-hero">
       <div class="ac-hero-eyebrow">국민경제학교 · 01-30강</div>
       <h2>강의를 듣고, ATC 리워드 받기</h2>
-      <p>3개 주제(SUB)를 모두 맞히면 강의가 끝나고, WALLET으로 가기를 누르면 리워드가 지급됩니다.</p>
+      <p>3개 주제(SUB)를 모두 맞히면 강의가 끝납니다. 보상은 수강 기록을 월렛에 연결한 뒤, 텔레그램에서 <b>내 월렛 보기</b>를 열 때 정산됩니다.</p>
       <div class="ac-rule-box">
         <div class="ac-rule-row"><span>하루 최대 수강</span><b>5강</b></div>
         <div class="ac-rule-row"><span>강의 1개 완료 시</span><b>1 ATC</b></div>
@@ -2315,18 +2337,7 @@
 </script>
 
 <script>
-/* ===================== Master tab switch + view counter ===================== */
-const viewCounterEl = document.getElementById('viewCounter');
-
-function hitViewCounter(view){
-  // 무료 정적 카운터(countapi.xyz)를 사용합니다. 실패해도 페이지 동작에는 영향 없습니다.
-  const key = view === 'academy' ? 'academy' : 'whitepaper';
-  const label = view === 'academy' ? '국민경제학교' : '백서';
-  fetch(`https://countapi.mileshilliard.com/api/v1/hit/atc-nonfungibleai_${key}`)
-    .then(r => r.json())
-    .then(d => { if(viewCounterEl) viewCounterEl.textContent = `${label} 조회수 ${Number(d.value).toLocaleString()}`; })
-    .catch(() => { if(viewCounterEl) viewCounterEl.textContent = ''; });
-}
+/* ===================== Master tab switch ===================== */
 
 function activateView(view, opts){
   opts = opts || {};
@@ -2337,7 +2348,6 @@ function activateView(view, opts){
   document.getElementById('academyView').style.display = view === 'academy' ? 'block' : 'none';
   if(view === 'academy') renderAcademyList();
   if(!opts.silent) window.scrollTo({top:0});
-  hitViewCounter(view);
 }
 
 document.querySelectorAll('.master-tab').forEach(btn=>{
@@ -2348,6 +2358,10 @@ document.querySelectorAll('.master-tab').forEach(btn=>{
 // (renderAcademyList 등 아래에서 정의되므로, 실제 호출은 스크립트 맨 아래에서 합니다)
 function initialView(){
   const params = new URLSearchParams(window.location.search);
+  const completed = parseInt(params.get('completed') || '0', 10);
+  if(Number.isFinite(completed) && completed > 0){
+    acSetProgress(Math.max(acGetProgress(), Math.min(completed, 30)));
+  }
   const requested = params.get('view') === 'academy' ? 'academy' : 'wp';
   activateView(requested, { silent: true });
 }
@@ -2989,8 +3003,34 @@ const acLessons = [
 const acBody = document.getElementById('acBody');
 let acCurLesson = null, acCurSub = 0;
 
-function acGetProgress(){ return parseInt(localStorage.getItem('atc_lesson_progress') || '0'); }
-function acSetProgress(n){ localStorage.setItem('atc_lesson_progress', String(n)); }
+const ATC_WALLET_BOT_LINK = 'https://t.me/atcbeta_bot';
+
+function acWalletDeepLink(lesson){
+  const completedCount = Math.max(acGetProgress(), lesson?.id || 1);
+  const cappedCount = Math.min(Math.max(completedCount, 1), 30);
+  return `${ATC_WALLET_BOT_LINK}?start=academy_${cappedCount}`;
+}
+function acSetWalletStatus(message, type=''){
+  const el = document.getElementById('acWalletStatus');
+  if(!el) return;
+  el.className = `ac-wallet-status ${type}`.trim();
+  el.textContent = message || '';
+}
+function acOpenTelegramLink(url){
+  if(window.Telegram?.WebApp?.openTelegramLink){
+    window.Telegram.WebApp.openTelegramLink(url);
+  }else{
+    window.location.href = url;
+  }
+}
+function acConnectWalletForLesson(lesson){
+  acSetProgress(Math.max(acGetProgress(), lesson.id));
+  acSetWalletStatus('텔레그램에서 월렛을 연결하면 수강 기록이 반영됩니다.', 'ok');
+  acOpenTelegramLink(acWalletDeepLink(lesson));
+}
+
+function acGetProgress(){ const value = parseInt(localStorage.getItem('atc_lesson_progress') || '0', 10); return Number.isFinite(value) ? Math.max(0, Math.min(value, 30)) : 0; }
+function acSetProgress(n){ const value = Number.isFinite(Number(n)) ? Math.max(0, Math.min(parseInt(n, 10), 30)) : 0; localStorage.setItem('atc_lesson_progress', String(value)); }
 
 function renderAcademyList(){
   const p = acGetProgress();
@@ -3069,9 +3109,10 @@ function renderAcReward(l){
       <div class="ramt">+1 ATC</div>
       <button class="ac-wallet-btn" id="acWalletBtn">🔗 WALLET으로 가기</button>
       <div class="ac-wallet-note" id="acWalletNote">
-        텔레그램 미니앱 안에서 열렸다면 자동으로 지급됩니다.<br>
-        지금처럼 일반 브라우저에서는, 버튼을 누르면 텔레그램으로 이동해 최초 1회만 지갑을 연결합니다.
+        텔레그램 안에서 열렸다면 수강 기록이 바로 월렛에 저장됩니다.<br>
+        일반 브라우저에서는 텔레그램 연결 후 월렛에서 보상이 정산됩니다.
       </div>
+      <div class="ac-wallet-status" id="acWalletStatus"></div>
       <div class="ac-bonus" id="acBonus">
         <div class="bt">30강 전체 수료 보너스</div>
         <div class="bamt">+100 ATC</div>
@@ -3081,36 +3122,12 @@ function renderAcReward(l){
       <button class="ac-back-list" id="acBackListBtn">강의 목록으로</button>
     </div>
   `;
-  document.getElementById('acWalletBtn').addEventListener('click', ()=>{
-    // NOTE: 데모용 시뮬레이션입니다.
-    // 실제 구현에서는 아래처럼 분기합니다.
-    //   1) 텔레그램 미니앱 안이면 window.Telegram.WebApp.initData 로 유저 즉시 확인 → 바로 지급
-    //   2) 일반 브라우저면 서버가 발급한 1회용 토큰을 붙여
-    //      https://t.me/ATC_bot?start=<token> 링크를 열어 텔레그램에서 연결 → 이후 세션에 귀속
-    // 리워드 지급 자체는 매 강의마다 WALLET에 즉시 트랜잭션을 쏘지 않고,
-    // 서버 내부 원장에 "적립 예정"으로 기록한 뒤 배치로 동기화하는 구조를 권장합니다.
-    const isTelegram = !!(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData);
-    if(!isTelegram){
-      // 데모: 실제 서비스에서는 아래 URL이 서버 발급 토큰을 포함한 실제 봇 딥링크로 대체됩니다.
-      // window.location.href = 'https://t.me/ATC_bot?start=' + linkToken;
-    }
-    acSetProgress(Math.max(acGetProgress(), l.id));
-    const b = document.getElementById('acWalletBtn');
-    b.textContent = '✓ 리워드 수령 완료';
-    b.disabled = true;
-    if(isFinal){
-      document.getElementById('acBonus').classList.add('show');
-    }
-    document.getElementById('acBackListBtn').classList.add('show');
-  });
+  document.getElementById('acWalletBtn').addEventListener('click', ()=> acConnectWalletForLesson(l));
   document.getElementById('acBackListBtn').addEventListener('click', acBackToList);
   const walletCheckBtn = document.getElementById('acWalletCheckBtn');
   if(walletCheckBtn){
     walletCheckBtn.addEventListener('click', ()=>{
-      // 실제 구현: 연동된 WALLET 시스템(텔레그램 미니앱)의 잔고 화면으로 이동
-      // window.location.href = 'https://t.me/ATC_bot/wallet';
-      walletCheckBtn.textContent = '✓ 지갑 잔고 130 ATC 확인됨 (데모)';
-      walletCheckBtn.disabled = true;
+      acOpenTelegramLink(acWalletDeepLink(l));
     });
   }
 }
