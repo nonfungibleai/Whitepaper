@@ -1173,10 +1173,6 @@
   .master-tab:hover:not(.active){ color: var(--ink); }
   .master-tab.active[data-view="wp"]{ background: var(--blue); color: #fff; }
   .master-tab.active[data-view="academy"]{ background: var(--mint); color: #fff; }
-  .view-counter{
-    font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--ink-soft);
-    white-space: nowrap;
-  }
 
   /* ================= Academy view ================= */
   #academyView{ display: none; }
@@ -1368,7 +1364,6 @@
     <button type="button" class="master-tab active" data-view="wp">📄 백서</button>
     <button type="button" class="master-tab" data-view="academy">🎓 국민경제학교</button>
   </div>
-  <span class="view-counter" id="viewCounter">조회수 · · ·</span>
 </div>
 
 <div id="wpView">
@@ -2342,18 +2337,7 @@
 </script>
 
 <script>
-/* ===================== Master tab switch + view counter ===================== */
-const viewCounterEl = document.getElementById('viewCounter');
-
-function hitViewCounter(view){
-  // 무료 정적 카운터(countapi.xyz)를 사용합니다. 실패해도 페이지 동작에는 영향 없습니다.
-  const key = view === 'academy' ? 'academy' : 'whitepaper';
-  const label = view === 'academy' ? '국민경제학교' : '백서';
-  fetch(`https://countapi.mileshilliard.com/api/v1/hit/atc-nonfungibleai_${key}`)
-    .then(r => r.json())
-    .then(d => { if(viewCounterEl) viewCounterEl.textContent = `${label} 조회수 ${Number(d.value).toLocaleString()}`; })
-    .catch(() => { if(viewCounterEl) viewCounterEl.textContent = ''; });
-}
+/* ===================== Master tab switch ===================== */
 
 function activateView(view, opts){
   opts = opts || {};
@@ -2364,7 +2348,6 @@ function activateView(view, opts){
   document.getElementById('academyView').style.display = view === 'academy' ? 'block' : 'none';
   if(view === 'academy') renderAcademyList();
   if(!opts.silent) window.scrollTo({top:0});
-  hitViewCounter(view);
 }
 
 document.querySelectorAll('.master-tab').forEach(btn=>{
